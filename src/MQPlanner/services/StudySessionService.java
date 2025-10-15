@@ -1,6 +1,8 @@
-package studyPlanner.services;
+package MQPlanner.services;
 
-import studyPlanner.models.StudySession;
+import MQPlanner.models.StudySession;
+import MQPlanner.models.Subject;
+import MQPlanner.utils.FileStorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,14 +13,12 @@ import java.util.List;
  */
 public class StudySessionService {
 
-    private List<StudySession> sessions;
+    private ArrayList<StudySession> sessions;
 
-    public void StudySessionService() {
-        this.sessions = new ArrayList<>();
+    public StudySessionService(ArrayList<Subject> subjects) {
+        this.sessions = FileStorage.loadSessions(subjects) ;
     }
 
-
-    // -------------------- ADD / LOG SESSION --------------------
 
     /**
      * Logs a new study session.
@@ -26,10 +26,11 @@ public class StudySessionService {
      */
     public void logSession(StudySession session) {
         sessions.add(session);
+        FileStorage.saveSessions(sessions);
         System.out.println("Study session logged for subject: " + session.getSubject().getSubjectName());
     }
 
-    // -------------------- GET SESSIONS --------------------
+
 
     /**
      * Returns all study sessions.
@@ -54,7 +55,7 @@ public class StudySessionService {
         return result;
     }
 
-    // -------------------- TOTAL STUDY TIME --------------------
+
 
     /**
      * Calculates total study time (in minutes) for a specific subject.
@@ -83,7 +84,6 @@ public class StudySessionService {
         return total;
     }
 
-    // -------------------- REMOVE SESSION --------------------
 
     /**
      * Removes a study session by its index in the list.
@@ -93,6 +93,7 @@ public class StudySessionService {
     public boolean removeSession(int index) {
         if (index >= 0 && index < sessions.size()) {
             sessions.remove(index);
+            FileStorage.saveSessions(sessions);
             return true;
         }
         return false;

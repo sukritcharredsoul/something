@@ -1,4 +1,4 @@
-package studyPlanner.test;
+package MQPlanner.test;
 
 import org.junit.Test;
 

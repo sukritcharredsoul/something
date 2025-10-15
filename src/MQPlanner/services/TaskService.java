@@ -1,7 +1,8 @@
-package studyPlanner.services;
+package MQPlanner.services;
 
-import studyPlanner.models.Task;
-import studyPlanner.models.Subject;
+import MQPlanner.models.Task;
+import MQPlanner.models.Subject;
+import MQPlanner.utils.FileStorage;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -13,11 +14,11 @@ import java.util.List;
  */
 public class TaskService {
 
-    private final List<Task> tasks;
+    private final ArrayList<Task> tasks;
+    
 
-
-    public TaskService() {
-        this.tasks = new ArrayList<>();
+    public TaskService(ArrayList<Subject> subjects) {
+        this.tasks = FileStorage.loadTasks(subjects) ;
     }
 
 
@@ -27,7 +28,8 @@ public class TaskService {
      */
     public void addTask(Task task) {
         tasks.add(task);
-        System.out.println("✅ Task added: " + task.getTaskName());
+        FileStorage.saveTasks(tasks);
+        System.out.println("Task added " + task.getTaskName());
     }
 
     /**
@@ -38,10 +40,11 @@ public class TaskService {
     public void addTask(Task task, Subject subject) {
         task.setSubject(subject);
         addTask(task);
+        FileStorage.saveTasks(tasks);
     }
 
 
-    public List<Task> getAllTasks() {
+    public ArrayList<Task> getAllTasks() {
         return tasks;
     }
 
@@ -99,6 +102,7 @@ public class TaskService {
         Task t = getTaskById(taskId);
         if (t != null) {
             t.setStatus(status);
+            FileStorage.saveTasks(tasks);
             return true;
         }
         return false;
@@ -109,6 +113,7 @@ public class TaskService {
         Task t = getTaskById(taskId);
         if (t != null) {
             t.setReminder(reminder);
+            FileStorage.saveTasks(tasks);
             return true;
         }
         return false;
@@ -119,6 +124,7 @@ public class TaskService {
         Task t = getTaskById(taskId);
         if (t != null) {
             tasks.remove(t);
+            FileStorage.saveTasks(tasks);
             return true;
         }
         return false;
