@@ -9,19 +9,28 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
+ *
  * Utility class for saving and loading Subjects, Tasks, and StudySessions
- * to and from CSV files. This provides persistence for the Study Planner.
+ * to and from CSV files. This provides storage of data into .csv Files under the data folder
+ *
  */
 public class FileStorage {
 
-    // Directory and file paths
+    /**
+     * Here I've defined the file String and where actually the data will actually be stored , I've followed
+     * the All-Caps format to basically separate out the difference between normal Variables and the ones that
+     * I'm using for Application in terms of the normal In-Memory Computions.
+     */
     private static final String DATA_DIR = "src/data";
     private static final String SUBJECTS_FILE = DATA_DIR + "/subjects.csv";
     private static final String TASKS_FILE = DATA_DIR + "/tasks.csv";
     private static final String SESSIONS_FILE = DATA_DIR + "/sessions.csv";
 
     /**
-     * Ensures that the data directory exists. Creates it if it does not exist.
+     *
+     * Ensures that the data directory exists. Creates it if it does not exist and if It doesn't It also prints out
+     * a text message , "Failed to Create data directory".
+     *
      */
     private static void ensureDataDirExists() {
         File dir = new File(DATA_DIR);
@@ -33,7 +42,15 @@ public class FileStorage {
         }
     }
 
-    // ======================== SUBJECTS ========================
+    /*
+    *
+    * Here below i've defined the two methods i would require for all the models, one for pulling the data from the .csv filles
+     * and the other for pushing the data into the .csv file. Finally After milestone 2 , I changed the services to
+     * basically instead of doing in memory calculations use these utilary methods to store it instead.
+     *
+     *
+    */
+
 
     /**
      * Saves all subjects into the subjects CSV file.
@@ -88,7 +105,10 @@ public class FileStorage {
         return subjects;
     }
 
-    // ======================== TASKS ========================
+    /*
+     *  We
+     */
+
 
     /**
      * Saves all tasks into the tasks CSV file.
@@ -162,7 +182,7 @@ public class FileStorage {
         return tasks;
     }
 
-    // ===================== STUDY SESSIONS =====================
+
 
     /**
      * Saves all study sessions into the sessions CSV file.
@@ -226,7 +246,7 @@ public class FileStorage {
         return sessions;
     }
 
-    // ===================== HELPER METHODS =====================
+    // Helper methods to sort out this.
 
     /**
      * Escapes commas in strings to avoid breaking CSV format.

@@ -60,7 +60,7 @@ public class SessionCLI {
     }
 
     private void logSession() {
-        System.out.println("\n--- Log New Study Session ---");
+        System.out.println("\n Add New Study Session");
 
         // Select subject
         List<Subject> subjects = subjectService.getAllSubjects();
@@ -79,30 +79,30 @@ public class SessionCLI {
         // Session date
         LocalDate date = null;
         while (date == null) {
-            System.out.print("Enter session date (YYYY-MM-DD): ");
+            System.out.print("Enter session date [YYYY-MM-DD]  ");
             String dateInput = scanner.nextLine().trim();
             try {
                 date = LocalDate.parse(dateInput, dateFormatter);
             } catch (DateTimeParseException e) {
-                System.out.println("Invalid date format. Please try again.");
+                System.out.println("Invalid date format.");
             }
         }
 
         // Duration
-        System.out.print("Enter duration in minutes: ");
+        System.out.print("Enter duration in minutes ");
         int duration = readPositiveInt();
 
         // Description
-        System.out.print("Enter session description: ");
+        System.out.print("Enter session description ");
         String description = scanner.nextLine().trim();
 
         StudySession session = new StudySession(subject, date, duration, description);
         sessionService.logSession(session);
-        System.out.println("Session logged successfully.");
+        System.out.println("Session logged successfully ");
     }
 
     private void listAllSessions() {
-        System.out.println("\n--- All Study Sessions ---");
+        System.out.println("\n  Study Sessions ");
         List<StudySession> sessions = sessionService.getAllSessions();
         if (sessions.isEmpty()) {
             System.out.println("No study sessions found.");
@@ -121,7 +121,7 @@ public class SessionCLI {
     }
 
     private void listSessionsBySubject() {
-        System.out.println("\n--- Sessions by Subject ---");
+        System.out.println("\n  Sessions by Subject ");
         Subject subject = selectSubject();
         if (subject == null) return;
 
@@ -140,7 +140,7 @@ public class SessionCLI {
     }
 
     private void showTotalTimeBySubject() {
-        System.out.println("\n--- Total Study Time by Subject ---");
+        System.out.println("\n Total Study Time by Subject ");
         Subject subject = selectSubject();
         if (subject == null) return;
 
@@ -154,7 +154,7 @@ public class SessionCLI {
     }
 
     private void removeSession() {
-        System.out.println("\n--- Remove a Study Session ---");
+        System.out.println("\n Remove a Study Session ");
         List<StudySession> sessions = sessionService.getAllSessions();
         if (sessions.isEmpty()) {
             System.out.println("No sessions to remove.");
@@ -171,7 +171,7 @@ public class SessionCLI {
                     s.getDescription());
         }
 
-        System.out.print("Select session to remove: ");
+        System.out.print("Select session to remove ");
         int index = readIntInRange(1, sessions.size()) - 1;
 
         if (sessionService.removeSession(index)) {
@@ -181,7 +181,7 @@ public class SessionCLI {
         }
     }
 
-    // --- Helper Methods ---
+
     private Subject selectSubject() {
         List<Subject> subjects = subjectService.getAllSubjects();
         if (subjects.isEmpty()) {

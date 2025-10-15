@@ -15,8 +15,17 @@ import java.util.Scanner;
  */
 public class SubjectCLI {
 
+    /**
+     *
+     * All the services that I am going to use in the CLI needs to call the Service Class too.
+     * So I have TaskService and SubjectService objects.
+     *
+     *
+     **/
     private final SubjectService subjectService;
     private final TaskService taskService;
+
+
     private final Scanner scanner;
 
     public SubjectCLI(SubjectService subjectService, TaskService taskService) {
@@ -61,10 +70,9 @@ public class SubjectCLI {
             System.out.println("No subjects found.");
             return;
         }
-        System.out.println("--- Subjects ---");
+        System.out.println(" Subjects ");
         for (Subject s : subjects) {
-            System.out.printf("ID: %d | Name: %s | Duration: %s%n",
-                    s.getSubjectId(), s.getSubjectName(), s.getSubjectDuration());
+            System.out.printf("ID: %d | Name: %s | Duration: %s%n", s.getSubjectId(), s.getSubjectName(), s.getSubjectDuration());
         }
     }
 
@@ -124,7 +132,7 @@ public class SubjectCLI {
             return;
         }
 
-        System.out.println("--- Prerequisites ---");
+        System.out.println(" Prerequisites ");
         for (Subject s : prerequisites) {
             System.out.printf("ID: %d | Name: %s%n", s.getSubjectId(), s.getSubjectName());
         }
@@ -141,12 +149,10 @@ public class SubjectCLI {
             return;
         }
 
-        System.out.println("--- Tasks for " + subject.getSubjectName() + " ---");
+        System.out.println(" Tasks for " + subject.getSubjectName() + " ");
         for (Task t : tasks) {
-            System.out.printf("ID: %d | Name: %s | Priority: %s | Status: %s | Due: %s | Reminder: %s%n",
-                    t.getTaskId(), t.getTaskName(), t.getPriority(), t.getStatus(),
-                    t.getDueDate() != null ? t.getDueDate() : "No due date",
-                    t.isReminder() ? "Yes" : "No");
+            // Used printf Function as it was helping me
+            System.out.printf("ID: %d | Name: %s | Priority: %s | Status: %s | Due: %s | Reminder: %s%n",  t.getTaskId(), t.getTaskName(), t.getPriority(), t.getStatus(), t.getDueDate() != null ? t.getDueDate() : "No due date", t.isReminder() ? "Yes" : "No");
         }
     }
 

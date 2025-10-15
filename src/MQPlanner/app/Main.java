@@ -23,17 +23,16 @@ public class Main {
 
         SubjectCLI subjectCLI = new SubjectCLI(subjectService,taskService);
         SessionCLI sessionCLI = new SessionCLI(sessionService, subjectService);
-        // TaskCLI can be added similarly when ready
-        // TaskCLI taskCLI = new TaskCLI(taskService, subjectService);
+        TaskCLI taskCLI = new TaskCLI(taskService);
 
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
 
         while (running) {
-            System.out.println("\n--- Study Planner Main Menu ---");
+            System.out.println("\n MQ Planner ");
             System.out.println("1. Manage Subjects");
             System.out.println("2. Manage Study Sessions");
-            System.out.println("3. Manage Tasks"); // Optional: uncomment if TaskCLI exists
+            System.out.println("3. Manage Tasks");
             System.out.println("0. Exit");
             System.out.print("Select an option: ");
 
@@ -42,7 +41,7 @@ public class Main {
             switch (input) {
                 case "1" -> subjectCLI.start();
                 case "2" -> sessionCLI.start();
-                // case "3" -> taskCLI.start();
+                case "3" -> taskCLI.start();
                 case "0" -> running = false;
                 default -> System.out.println("Invalid option. Please try again.");
             }

@@ -26,7 +26,7 @@ public class TaskCLI {
     /**
      * Displays the main Task menu and handles user choices.
      */
-    public void showMenu() {
+    public void start() {
         int choice;
         do {
             System.out.println("\n===== Task Menu =====");

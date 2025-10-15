@@ -8,19 +8,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ *
  * Service class to manage Study Sessions in the Study Planner.
  * Handles logging sessions, retrieving them, and calculating total study time.
+ * Sessions is a functionality i thought about in a sense that it would keep everyone in check about the time
+ *
  */
 public class StudySessionService {
 
+
     private ArrayList<StudySession> sessions;
 
+
+    /**
+     *
+     * StudySessionService Constructor which accepts an ArrayList Subjects.
+     *
+     */
     public StudySessionService(ArrayList<Subject> subjects) {
         this.sessions = FileStorage.loadSessions(subjects) ;
     }
 
 
     /**
+     *
      * Logs a new study session.
      * @param session StudySession object to add
      */
