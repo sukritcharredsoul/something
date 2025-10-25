@@ -4,17 +4,13 @@ import MQPlanner.models.StudySession;
 import MQPlanner.models.Subject;
 import MQPlanner.services.StudySessionService;
 import MQPlanner.services.SubjectService;
+import MQPlanner.utils.LinkedList;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.List;
 import java.util.Scanner;
 
-/**
- * CLI class to interact with StudySessionService.
- * Allows logging sessions, listing sessions, calculating study time, and removing sessions.
- */
 public class SessionCLI {
 
     private final StudySessionService sessionService;
@@ -28,12 +24,8 @@ public class SessionCLI {
         this.scanner = new Scanner(System.in);
     }
 
-    /**
-     * Start the CLI loop for Study Sessions
-     */
     public void start() {
         boolean running = true;
-
         while (running) {
             System.out.println("\n--- Study Session CLI ---");
             System.out.println("1. Log new session");
@@ -63,7 +55,7 @@ public class SessionCLI {
         System.out.println("\n Add New Study Session");
 
         // Select subject
-        List<Subject> subjects = subjectService.getAllSubjects();
+        LinkedList<Subject> subjects = convertArrayListToLinkedList((java.util.ArrayList<Subject>) subjectService.getAllSubjects());
         if (subjects.isEmpty()) {
             System.out.println("No subjects found. Please add subjects first.");
             return;
@@ -103,7 +95,7 @@ public class SessionCLI {
 
     private void listAllSessions() {
         System.out.println("\n  Study Sessions ");
-        List<StudySession> sessions = sessionService.getAllSessions();
+        LinkedList<StudySession> sessions = sessionService.getAllSessions();
         if (sessions.isEmpty()) {
             System.out.println("No study sessions found.");
             return;
@@ -125,13 +117,14 @@ public class SessionCLI {
         Subject subject = selectSubject();
         if (subject == null) return;
 
-        List<StudySession> sessions = sessionService.getSessionsBySubject(subject.getSubjectName());
+        LinkedList<StudySession> sessions = sessionService.getSessionsBySubject(subject.getSubjectName());
         if (sessions.isEmpty()) {
             System.out.println("No sessions found for this subject.");
             return;
         }
 
-        for (StudySession s : sessions) {
+        for (int i = 0; i < sessions.size(); i++) {
+            StudySession s = sessions.get(i);
             System.out.printf("Date: %s | Duration: %d min | Description: %s\n",
                     s.getSessionDate(),
                     s.getDurationMinutes(),
@@ -155,7 +148,7 @@ public class SessionCLI {
 
     private void removeSession() {
         System.out.println("\n Remove a Study Session ");
-        List<StudySession> sessions = sessionService.getAllSessions();
+        LinkedList<StudySession> sessions = sessionService.getAllSessions();
         if (sessions.isEmpty()) {
             System.out.println("No sessions to remove.");
             return;
@@ -181,9 +174,8 @@ public class SessionCLI {
         }
     }
 
-
     private Subject selectSubject() {
-        List<Subject> subjects = subjectService.getAllSubjects();
+        LinkedList<Subject> subjects = convertArrayListToLinkedList((java.util.ArrayList<Subject>) subjectService.getAllSubjects());
         if (subjects.isEmpty()) {
             System.out.println("No subjects found. Please add subjects first.");
             return null;
@@ -219,5 +211,13 @@ public class SessionCLI {
                 System.out.println("Invalid input. Enter a number.");
             }
         }
+    }
+
+    private <T> LinkedList<T> convertArrayListToLinkedList(java.util.ArrayList<T> list) {
+        LinkedList<T> linkedList = new LinkedList<>();
+        for (T item : list) {
+            linkedList.add(item);
+        }
+        return linkedList;
     }
 }

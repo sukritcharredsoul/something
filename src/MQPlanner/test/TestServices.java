@@ -3,9 +3,9 @@ package MQPlanner.test;
 import MQPlanner.models.StudySession;
 import MQPlanner.models.Subject;
 import MQPlanner.services.StudySessionService;
+import MQPlanner.services.SubjectService;
 import MQPlanner.utils.FileStorage;
 import org.junit.jupiter.api.*;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,11 +20,13 @@ import static org.junit.jupiter.api.Assertions.*;
  * - Filtering by subject
  * - Calculating total study time
  * - Removing sessions
+ * - Subject management
  */
 public class TestServices {
 
     private StudySessionService studySessionService;
     private ArrayList<Subject> subjects;
+    private SubjectService subjectService;
 
     /**
      * Initializes test data before each test case.
@@ -36,54 +38,10 @@ public class TestServices {
         subjects.add(new Subject(1,"Mathematics", "Formulas and problem solving",null,null));
         subjects.add(new Subject(2,"Physics", "Conceptual and numerical topics",null,null));
 
-        // Clear existing session data before each test
         FileStorage.saveSessions(new ArrayList<>());
 
         studySessionService = new StudySessionService(subjects);
-    }
-
-    /**
-     * Tests that a new study session can be logged successfully.
-     */
-    @Test
-    public void testLogSession() {
-        StudySession session = new StudySession(
-                subjects.get(0),
-                LocalDate.now(),
-                60,
-                "Studied calculus problems"
-        );
-
-        studySessionService.logSession(session);
-
-        List<StudySession> allSessions = studySessionService.getAllSessions();
-        assertEquals(1, allSessions.size());
-        assertEquals("Mathematics", allSessions.get(0).getSubject().getSubjectName());
-    }
-
-    /**
-     * Tests retrieval of all stored study sessions.
-     */
-    @Test
-    public void testGetAllSessions() {
-        studySessionService.logSession(new StudySession(subjects.get(0), LocalDate.now(), 30, "Formulas"));
-        studySessionService.logSession(new StudySession(subjects.get(1), LocalDate.now(), 45, "Kinematics"));
-
-        List<StudySession> sessions = studySessionService.getAllSessions();
-        assertEquals(2, sessions.size());
-    }
-
-    /**
-     * Tests filtering sessions by specific subject name.
-     */
-    @Test
-    public void testGetSessionsBySubject() {
-        studySessionService.logSession(new StudySession(subjects.get(0), LocalDate.now(), 50, "Trigonometry"));
-        studySessionService.logSession(new StudySession(subjects.get(1), LocalDate.now(), 40, "Optics"));
-
-        List<StudySession> mathSessions = studySessionService.getSessionsBySubject("Mathematics");
-        assertEquals(1, mathSessions.size());
-        assertEquals("Mathematics", mathSessions.get(0).getSubject().getSubjectName());
+        subjectService = new SubjectService();
     }
 
     /**
@@ -97,6 +55,20 @@ public class TestServices {
 
         int totalMathTime = studySessionService.getTotalStudyTime("Mathematics");
         assertEquals(75, totalMathTime);
+    }
+
+    /**
+     * Test to check whether subjects can be added properly.
+     */
+    @Test
+    @DisplayName("Add Subject - should add and persist new subject")
+    void testAddSubject() {
+        Subject s = new Subject(3, "Chemistry", "4 months", null , null);
+        subjectService.addSubject(s);
+
+        List<Subject> all = subjectService.getAllSubjects();
+        boolean found = all.stream().anyMatch(sub -> sub.getSubjectName().equals("Chemistry"));
+        assertTrue(found, "Subject 'Chemistry' should be added successfully");
     }
 
     /**

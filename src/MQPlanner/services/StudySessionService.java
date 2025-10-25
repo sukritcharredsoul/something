@@ -3,9 +3,10 @@ package MQPlanner.services;
 import MQPlanner.models.StudySession;
 import MQPlanner.models.Subject;
 import MQPlanner.utils.FileStorage;
+import MQPlanner.utils.LinkedList;
 
 import java.util.ArrayList;
-import java.util.List;
+
 
 /**
  *
@@ -14,51 +15,49 @@ import java.util.List;
  * Sessions is a functionality i thought about in a sense that it would keep everyone in check about the time
  *
  */
+
+
 public class StudySessionService {
 
-
-    private ArrayList<StudySession> sessions;
-
+    private LinkedList<StudySession> sessions;
 
     /**
-     *
-     * StudySessionService Constructor which accepts an ArrayList Subjects.
-     *
+     * Constructor accepts an ArrayList of subjects (for Main compatibility)
      */
     public StudySessionService(ArrayList<Subject> subjects) {
-        this.sessions = FileStorage.loadSessions(subjects) ;
+        this.sessions = new LinkedList<>();
+        ArrayList<StudySession> loaded = FileStorage.loadSessions(subjects);
+        for (StudySession s : loaded) {
+            sessions.add(s);
+        }
     }
 
-
     /**
-     *
-     * Logs a new study session.
-     * @param session StudySession object to add
+     * Alternative constructor for LinkedList<Subject>
      */
+    public StudySessionService(LinkedList<Subject> subjects) {
+        this.sessions = new LinkedList<>();
+        ArrayList<Subject> subjectsList = convertLinkedListToArrayList(subjects);
+        ArrayList<StudySession> loaded = FileStorage.loadSessions(subjectsList);
+        for (StudySession s : loaded) {
+            sessions.add(s);
+        }
+    }
+
     public void logSession(StudySession session) {
         sessions.add(session);
-        FileStorage.saveSessions(sessions);
+        FileStorage.saveSessions(convertLinkedListToArrayList(sessions));
         System.out.println("Study session logged for subject: " + session.getSubject().getSubjectName());
     }
 
-
-
-    /**
-     * Returns all study sessions.
-     * @return list of StudySession objects
-     */
-    public List<StudySession> getAllSessions() {
+    public LinkedList<StudySession> getAllSessions() {
         return sessions;
     }
 
-    /**
-     * Returns all sessions for a specific subject.
-     * @param subjectName Name of the subject
-     * @return list of StudySession objects for that subject
-     */
-    public List<StudySession> getSessionsBySubject(String subjectName) {
-        List<StudySession> result = new ArrayList<>();
-        for (StudySession s : sessions) {
+    public LinkedList<StudySession> getSessionsBySubject(String subjectName) {
+        LinkedList<StudySession> result = new LinkedList<>();
+        for (int i = 0; i < sessions.size(); i++) {
+            StudySession s = sessions.get(i);
             if (s.getSubject().getSubjectName().equals(subjectName)) {
                 result.add(s);
             }
@@ -66,16 +65,10 @@ public class StudySessionService {
         return result;
     }
 
-
-
-    /**
-     * Calculates total study time (in minutes) for a specific subject.
-     * @param subjectName Name of the subject
-     * @return total duration in minutes
-     */
     public int getTotalStudyTime(String subjectName) {
         int total = 0;
-        for (StudySession s : sessions) {
+        for (int i = 0; i < sessions.size(); i++) {
+            StudySession s = sessions.get(i);
             if (s.getSubject().getSubjectName().equals(subjectName)) {
                 total += s.getDurationMinutes();
             }
@@ -83,30 +76,28 @@ public class StudySessionService {
         return total;
     }
 
-    /**
-     * Calculates total study time (in minutes) across all subjects.
-     * @return total duration in minutes
-     */
     public int getTotalStudyTime() {
         int total = 0;
-        for (StudySession s : sessions) {
-            total += s.getDurationMinutes();
+        for (int i = 0; i < sessions.size(); i++) {
+            total += sessions.get(i).getDurationMinutes();
         }
         return total;
     }
 
-
-    /**
-     * Removes a study session by its index in the list.
-     * @param index Index of the session to remove
-     * @return true if removed successfully, false otherwise
-     */
     public boolean removeSession(int index) {
-        if (index >= 0 && index < sessions.size()) {
-            sessions.remove(index);
-            FileStorage.saveSessions(sessions);
-            return true;
+        boolean removed = sessions.remove(index);
+        if (removed) {
+            FileStorage.saveSessions(convertLinkedListToArrayList(sessions));
         }
-        return false;
+        return removed;
+    }
+
+    /** Helper to convert LinkedList to ArrayList for FileStorage */
+    private <T> ArrayList<T> convertLinkedListToArrayList(LinkedList<T> list) {
+        ArrayList<T> arrayList = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            arrayList.add(list.get(i));
+        }
+        return arrayList;
     }
 }
